@@ -12,14 +12,14 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
         {
             if (index < 0) throw new NotSupportedException("index < 0");
             long result = this.index[index];
-            long resultTwo = index == 0 ? 0 : this.index[index - 1];
-            return this.Read(resultTwo, result - resultTwo);
+            long resultTwo = /*index == 0 ? 0 : */this.index[index - 1];
+            return this.Read(resultTwo, result-resultTwo);
         }
         public void SetInfo(byte[] info)
         {
             this.Write(info);
         }
-        //public byte[] this[int index] { set=>null;get => null; }
+        public long Count { get => this.index.Count; }
         public Creator(int count, Stream stream) : base(stream)
         {
 

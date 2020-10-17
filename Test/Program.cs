@@ -12,17 +12,30 @@ namespace Test
 {
     class Program
     {
+        static string GetString(byte[] bytes)
+        {
+            return Encoding.UTF8.GetString(bytes);
+        }
+        static byte[] GetByteToString(string result)
+        {
+            return Encoding.UTF8.GetBytes(result);
+        }
         static void Main(string[] args)
         {
             string res = "1234567890";
-            res = string.Join("", Enumerable.Repeat(res, 300).SelectMany(y => y));
             var bytes = Encoding.UTF8.GetBytes(res);
             var stream = File.Open("save", FileMode.OpenOrCreate, FileAccess.ReadWrite);
             Creator creator = new Creator(10, stream);
-            creator.SetInfo(bytes);
-            var result = creator.GetInfo(0);
-             string x = Encoding.UTF8.GetString(result);
-            Console.WriteLine(x);
+            for (int i = 0; i < 10; i++)
+            {
+                creator.SetInfo(GetByteToString((res+i)));
+            }
+            for (int i = 1; i < 10; i++)
+            {
+               var result = creator.GetInfo(i);
+               var save = GetString(result);
+               Console.WriteLine(save);
+            }
             Console.WriteLine("OK");
             Console.ReadKey();
         }

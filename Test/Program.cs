@@ -32,8 +32,8 @@ namespace Test
                 creator.SetInfo(GetByteToString((res+i)));
             }
             WriteLine(creator);
-            creator[4] = GetByteToString("111111111111111111111111");
-            creator[4] = GetByteToString("user");
+            creator[4] = GetByteToString("1234567890||3456789");
+            creator[1] = GetByteToString("user");
             creator[4] = GetByteToString("12345");
             Console.WriteLine("Res");
             WriteLine(creator);

@@ -6,11 +6,14 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
 {
     public class IndexType
     {
-        public long index { set; get; }
+        public int indexMax { set; get; }
+        public int indexMin { set; get; }
         public bool remove { set; get; }
-        public IndexType(long index)
+        public IndexType(int indexMax,int indexMin,bool remove = false)
         {
-            this.index = index;
+            this.indexMax = indexMax;
+            this.indexMin = indexMin;
+            this.remove = remove;
         }
     }
 }

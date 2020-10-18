@@ -11,15 +11,14 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
         public byte[] GetInfo(int index)
         {
             if (index < 0) throw new NotSupportedException("index < 0");
-            long result = this.index[index];
-            long resultTwo = /*index == 0 ? 0 : */this.index[index - 1];
+            long result = this.index[index].index;
+            long resultTwo = index == 0 ? 0 : this.index[index - 1].index;
             return this.Read(resultTwo, result-resultTwo);
         }
         public void SetInfo(byte[] info)
         {
             this.Write(info);
         }
-        public long Count { get => this.index.Count; }
         public Creator(int count, Stream stream) : base(stream)
         {
 

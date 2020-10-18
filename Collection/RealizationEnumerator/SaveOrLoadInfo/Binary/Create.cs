@@ -14,13 +14,13 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
         protected override long Write(byte[] array)
         {
             long result = base.Write(array);
-            index.Add(result);
+            index.Add(new IndexType(result));
             return result;
         }
-        protected List<long> index { private set; get; }
+        protected List<IndexType> index { private set; get; }
         protected Create(Stream stream) : base(stream)
         {
-            this.index = new List<long>();
+            this.index = new List<IndexType>();
         }
     }
 }

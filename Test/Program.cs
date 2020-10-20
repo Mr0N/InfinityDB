@@ -23,7 +23,7 @@ namespace Test
         }
         static void Main(string[] args)
         {
-            string res = "1234567890|23456789";
+            string res = "";
             var bytes = Encoding.UTF8.GetBytes(res);
             var stream = File.Open("save", FileMode.OpenOrCreate, FileAccess.ReadWrite);
             SetWrite creator = new SetWrite(10, stream);
@@ -31,14 +31,21 @@ namespace Test
             {
                 creator.SetInfo(GetByteToString((res+i)));
             }
-            WriteLine(creator);
-            creator[4] = GetByteToString("1234567890||3456789");
-            creator[1] = GetByteToString("user");
-            creator[4] = GetByteToString("12345");
-            Console.WriteLine("Res");
-            WriteLine(creator);
-            Console.WriteLine("OK");
+            while (true)
+            {
+                Console.WriteLine("Index");
+                int index = int.Parse(Console.ReadLine());
+                Console.WriteLine("String:");
+                creator[index] = GetByteToString(Console.ReadLine());
+                Write(creator);
+            }
             Console.ReadKey();
+        }
+        private static void Write(in SetWrite set)
+        {
+            Console.WriteLine(new string('-', 20));
+            WriteLine(set);
+            Console.WriteLine(new string('-', 20));
         }
         private static void WriteLine(SetWrite set)
         {

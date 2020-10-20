@@ -17,26 +17,31 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
             
             int ind = this.GetIlusionIndex(index);
             var obj = this.index[ind];
-            int valBytes = (int)(obj.indexMin - obj.indexMax);
-            if (valBytes == bytes.Length)//Якщо розмір байтів не помінявся
+            int lengthBytes = (int)(obj.indexMaximum - obj.indexMinimum);
+            if (lengthBytes == bytes.Length)//Якщо розмір байтів не помінявся
             {
-                this.Write(bytes, 0, bytes.Length, obj.indexMin);
+                this.Write(bytes, 0, bytes.Length, obj.indexMaximum);//Повторний записа байтів, на то саме місце
             }
-            else if (bytes.Length < valBytes)//Якщо кількість байтів зменшилася
+            else if (bytes.Length < lengthBytes)//Якщо кількість байтів зменшилася
             {
-                var result = this.Write(bytes, 0, bytes.Length, obj.indexMax);
+                var result = this.Write(bytes, 0, bytes.Length, obj.indexMinimum);
                 this.index.RemoveAt(ind);
-                this.index.Add(new IndexType(result.one_position, result.two_position));
-                this.index.Add(new IndexType(result.two_position, obj.indexMin, true));//Видаляєм елемент пам'яті
+                var x = new IndexType(result.one_position, result.two_position);
+                this.index.Add(x);
+                this.index.Add(new IndexType(result.two_position, obj.indexMaximum, true));//Видаляєм елемент пам'яті
+                this.index.Insert(ind, x);
             }
-            else if (valBytes < bytes.Length)//Якщо кількість байтів збільшилася
+            else if (lengthBytes < bytes.Length)//Якщо кількість байтів збільшилася
             {
-                //int maxBig = bytes.Length - valBytes;
-                //var resultWrite = this.Write(bytes, 0, maxBig, obj.indexMax);
-                //var writeAdd = this.WriteNew(bytes, maxBig, bytes.Length - maxBig);
-                //this.index.Add(new IndexType(resultWrite.one_position, resultWrite.two_position));
-                //this.index.Add(new IndexType(writeAdd.one_position, writeAdd.two_position));
-                //this.index.RemoveAt(ind);
+                //int maxLength = bytes.Length - lengthBytes;//Кількість байтів яку треба записати в комірці
+                var resultWrite = this.Write(bytes, 0, lengthBytes, obj.indexMinimum);
+                var result_two = this.WriteNew(bytes, lengthBytes, bytes.Length- lengthBytes);
+                this.index.RemoveAt(ind);
+                var indexZ = new IndexType(result_two.one_position, result_two.two_position, block: true);
+                var indexType = new IndexType(resultWrite.one_position, resultWrite.two_position);
+                indexType.next = indexZ;
+                this.index.Add(indexZ);
+                this.index.Insert(ind, indexType);
             }
         }
         public SetWrite(int count, Stream stream)

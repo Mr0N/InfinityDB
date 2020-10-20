@@ -21,10 +21,10 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
             }
         }
         public int Count()
-            => index.Where(x => x.remove == false).Count();
+            => index.Where(x => x.remove == false && x.block != true).Count();
         public int GetIlusionIndex(int index)
         {
-            var obj = this.index.Where(x => x.remove != true).ElementAt(index);
+            var obj = this.index.Where(x => x.remove != true && x.block != true).ElementAt(index);
             return this.index.FindIndex(t => t == obj);
         }
         public Info(int count, Stream stream) : base(count, stream)

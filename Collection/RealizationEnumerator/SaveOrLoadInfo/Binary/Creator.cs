@@ -11,7 +11,21 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
         public byte[] GetInfo(int index)
         {
             if (index < 0) throw new NotSupportedException("index < 0");
-            return this.Read(this.index[index].indexMin, this.index[index].indexMax);
+            var type = this.index[index];
+            byte[] result;
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                while ((result = this.Read(type.indexMaximum, type.indexMinimum)) != null)
+                {
+                    string res = Encoding.UTF8.GetString(result);
+                    memoryStream.Write(result, 0, result.Length);
+                    if (type.next == null)
+                        break;
+                    type = type.next;
+                }
+                return memoryStream.ToArray();
+            }
+
         }
         public byte[] GetInfoBytes(int one,int two)
         {

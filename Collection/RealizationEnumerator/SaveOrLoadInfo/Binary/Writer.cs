@@ -28,14 +28,17 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
             stream.Write(array, offsetArray, countArray);
             return (offsetSeek, (int)stream.Position);
         }
-
-
-    protected virtual byte[] Read(int one, int two)
+        protected virtual byte[] Read(int one, int two)
         {
             byte[] bytes = new byte[one-two];
             stream.Seek(two, SeekOrigin.Begin);
             stream.Read(bytes, 0, bytes.Length);
             return bytes;
+        }
+
+        protected virtual  void ReadToWrite(List<IndexType> list)
+        {
+
         }
         Stream stream;
         protected Writer(Stream stream)

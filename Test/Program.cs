@@ -23,14 +23,23 @@ namespace Test
         }
         static void Main(string[] args)
         {
+
             string res = "";
             var bytes = Encoding.UTF8.GetBytes(res);
+            File.Delete("save");
             var stream = File.Open("save", FileMode.OpenOrCreate, FileAccess.ReadWrite);
             SetWrite creator = new SetWrite(10, stream);
             for (int i = 0; i < 10; i++)
             {
                 creator.SetInfo(GetByteToString((res+i)));
             }
+            creator.RemoveIndex(5);
+            creator.RemoveIndex(3);
+            creator.Clear();
+            stream.Dispose();
+            Console.WriteLine(File.ReadAllText("save"));
+            Console.ReadKey();
+            return;
             while (true)
             {
                 Console.WriteLine("Index");

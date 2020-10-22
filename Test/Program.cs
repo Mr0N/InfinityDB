@@ -27,7 +27,7 @@ namespace Test
             var bytes = Encoding.UTF8.GetBytes(res);
             File.Delete("save");
             var stream = File.Open("save", FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            var becap = File.Open("save", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            var becap = File.Open("save1", FileMode.OpenOrCreate, FileAccess.ReadWrite);
             SetWrite creator = new SetWrite(10, stream, becap);
             for (int i = 0; i < 10; i++)
             {

@@ -35,7 +35,7 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
         {
             base.WriteInfo(info);
         }
-        public Creator(int count, Stream stream) : base(stream)
+        public Creator(int count, Stream stream, Stream stream_becap) : base(stream, stream_becap)
         {
 
         }

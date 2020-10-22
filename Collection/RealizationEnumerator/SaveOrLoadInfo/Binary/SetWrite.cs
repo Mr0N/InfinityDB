@@ -44,8 +44,8 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
                 this.index.Insert(ind, indexType);
             }
         }
-        public SetWrite(int count, Stream stream)
-            : base(count, stream)
+        public SetWrite(int count, Stream stream,Stream stream_becap)
+            : base(count, stream, stream_becap)
         {
 
         }

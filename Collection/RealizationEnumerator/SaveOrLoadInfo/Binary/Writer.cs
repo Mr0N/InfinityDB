@@ -41,9 +41,11 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
 
         }
         Stream stream;
-        protected Writer(Stream stream)
+        Stream stream_becap;
+        protected Writer(Stream stream, Stream stream_becap)
         {
             this.stream = stream;
+            this.stream_becap = stream_becap;
         }
     }
 }

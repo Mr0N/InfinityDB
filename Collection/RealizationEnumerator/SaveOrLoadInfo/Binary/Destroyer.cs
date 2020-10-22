@@ -60,22 +60,10 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
         {
             return position.Find(x => x.indexMaximum > index && x.indexMinimum <= index) != null;
         }
-        //private int GetCountBytesOffset(int indexMax)
-        //{
-        //    int workCountMaxOffsetClear = 1;
-        //    int offset = this.length - indexMax;
-        //    if (countMaxOffsetClear > offset) workCountMaxOffsetClear = offset;
-        //    else workCountMaxOffsetClear = countMaxOffsetClear;
-        //    workCountMaxOffsetClear = workCountMaxOffsetClear > 2 ? workCountMaxOffsetClear / 2 : workCountMaxOffsetClear;
-        //    return workCountMaxOffsetClear;
-        //}
-
-        //int countMaxOffsetClear;
         Stream stream;
 
-        public Destroyer(int count, Stream stream) : base(count, stream)
+        public Destroyer(int count, Stream stream,Stream stream_becap) : base(count, stream, stream_becap)
         {
-            //this.countMaxOffsetClear = countMaxOffsetClear;
             this.stream = stream;
         }
     }

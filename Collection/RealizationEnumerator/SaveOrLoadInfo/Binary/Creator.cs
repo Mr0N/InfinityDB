@@ -35,7 +35,7 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
         {
             base.WriteInfo(info);
         }
-        public Creator(int count, ObjType objType) : base(objType)
+        public Creator(ObjType objType) : base(objType)
         {
 
         }

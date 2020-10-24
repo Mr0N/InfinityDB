@@ -30,7 +30,7 @@ namespace Test
             var bytes = Encoding.UTF8.GetBytes(res);
             File.Delete("save");
             var result = new ObjType("save", x => File.Open(x, FileMode.OpenOrCreate, FileAccess.ReadWrite));
-            SetWrite creator = new SetWrite(10, result);
+            SetWrite creator = new SetWrite(result);
             for (int i = 0; i < 10; i++)
             {
                 creator.SetInfo(GetByteToString((res + i)));
@@ -38,7 +38,8 @@ namespace Test
             creator.RemoveIndex(5);
             creator.RemoveIndex(3);
             creator.Clear();
-            result.stream?.Dispose();
+            creator.SetInfo(GetByteToString("New"));
+            result.stream.Dispose();
             string resZ = File.ReadAllText("save");
             Console.WriteLine(resZ);
             Console.WriteLine("OK");

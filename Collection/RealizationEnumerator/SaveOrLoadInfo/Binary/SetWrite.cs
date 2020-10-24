@@ -44,8 +44,8 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
                 this.index.Insert(ind, indexType);
             }
         }
-        public SetWrite(int count, ObjType objType)
-            : base(count, objType)
+        public SetWrite(ObjType objType)
+            : base(objType)
         {
 
         }

@@ -57,13 +57,14 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
                 
             }
             base.objType.Exscind(write);
+            this.length = write;
         }
         protected bool CheckIsRange(int index, in List<IndexType> position)
         {
             return position.Find(x => x.indexMaximum > index && x.indexMinimum <= index) != null;
         }
 
-        public Destroyer(int count, ObjType objType) : base(count, objType)
+        public Destroyer(ObjType objType) : base(objType)
         {
         }
     }

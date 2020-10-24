@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -11,7 +12,7 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
         public byte[] GetInfo(int index)
         {
             if (index < 0) throw new NotSupportedException("index < 0");
-            var type = this.index[index];
+            var type = IndexGet(index);
             byte[] result;
             using (MemoryStream memoryStream = new MemoryStream())
             {
@@ -26,6 +27,15 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
                 return memoryStream.ToArray();
             }
 
+        }
+        List<IndexType> list;
+        public void Update()
+        {
+            this.list = this.index.Where(x => x.remove != true && x.block != true).ToList();
+        }
+        public IndexType IndexGet(int index)
+        {
+            return list[index];
         }
         public byte[] GetInfoBytes(int one,int two)
         {

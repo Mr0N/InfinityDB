@@ -18,6 +18,10 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo
         {
             writer.SetInfo(t.GetBytes());
         }
+        public void Update()
+        {
+            this.writer.Update();
+        }
         public void RemoveIndex(int index)
         {
             this.writer.RemoveIndex(index);

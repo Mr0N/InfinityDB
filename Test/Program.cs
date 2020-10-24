@@ -12,6 +12,7 @@ using Microsoft.WindowsAPICodePack;
 using System.Drawing;
 using System.Threading;
 using Collection;
+using System.Diagnostics;
 
 namespace Test
 {
@@ -44,14 +45,35 @@ namespace Test
         }
         static void Main(string[] args)
         {
+            Stopwatch watch = new Stopwatch();
             LocalList<Test> arrayLocal = new LocalList<Test>("save234");
-            var result = Enumerable.Range(0, 2000);
-            foreach (var item in result)
+            watch.Start();
+            for (int i = 0; i < 100000; i++)
             {
-                arrayLocal.Add(new Test() { text = item.ToString() });
+                arrayLocal.Add(new Test() { text = i.ToString() }) ;
             }
-            var rs =  arrayLocal.Sum(x => int.Parse(x.text));
-            Console.WriteLine(rs);
+            arrayLocal.CreateCount();
+            arrayLocal.Update();
+            watch.Stop();
+            Console.WriteLine("Add="+watch.ElapsedMilliseconds);
+            watch.Reset();
+            watch.Start();
+            string res = "";
+            int countIteration = 0;
+            int becap = 0;
+            foreach (var item in arrayLocal)
+            {
+                countIteration++;
+                if (countIteration > (becap+1000))
+                {
+                    Console.WriteLine(countIteration);
+                    becap = countIteration;
+                }
+                res = item.text;
+                //Console.WriteLine(res);
+            }
+            watch.Stop();
+            Console.WriteLine("Echo="+watch.ElapsedMilliseconds);
             Console.WriteLine("OK");
             Console.ReadKey();
             //string res = "";

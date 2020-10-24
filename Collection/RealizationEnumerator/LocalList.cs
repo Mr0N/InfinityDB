@@ -8,14 +8,18 @@ namespace Collection
  
     public class LocalList<T> :IList<T>,IEnumerator<T> where T : class, ISerializableObject<T>,new()
     {
+        public LocalList()
+        {
+            CreateCount(); 
+        }
         public T Current => 
             this.array[count_iteration];
 
         object IEnumerator.Current => 
             this.array[count_iteration];
 
-        public int Count => this.array.Count();
-
+        public int Count => count;
+        int count = 0;
         public bool IsReadOnly => true;
 
         public T this[int index] { get => array[index]; set => array[index] = value; }
@@ -34,8 +38,9 @@ namespace Collection
 
         public bool MoveNext()
         {
+           
             count_iteration++;
-            if (array.Count() <= count_iteration) 
+            if (this.Count <= count_iteration) 
                 return false;
             return true;
         }
@@ -65,14 +70,23 @@ namespace Collection
 
         public void RemoveAt(int index)
         {
+           // CreateCount();
             this.array.RemoveIndex(index);
         }
 
         public void Add(T item)
         {
+         //   CreateCount();
             this.array.Add(item);
         }
-
+        public void Update()
+        {
+            this.array.Update();
+        }
+        public void CreateCount()
+        {
+            this.count = array.Count();
+        }
         public void Clear()
         {
             int count = array.Count();

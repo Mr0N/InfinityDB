@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Collection.RealizationEnumerator.SaveOrLoadInfo.Binary;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -6,30 +7,45 @@ using System.Text;
 
 namespace Collection.RealizationEnumerator.SaveOrLoadInfo
 {
-    public class ArrayLocal<T>
+    public class ArrayLocal<T> where T : ISerializableObject<T>, new()
     {
-        public void AddNewIndex(int count)
-        {
 
-        }
-        public byte[] this[int index] { get => new byte[2]; }
-        int maxElements;
-        string saveFile;
-        Stream infoStream;
-        BigInteger[] integer;
-        private void CreateStream(string file)
+        public int Count()
         {
-            this.infoStream = File.Open(file, FileMode.Create, FileAccess.ReadWrite);
+           return this.writer.Count();
         }
-        private void Write()
+        public void Add(T t)
         {
-            this.infoStream.Write(null, 0, 0);
+            writer.SetInfo(t.GetBytes());
         }
-        public ArrayLocal(int maxElements,string saveFile)
+        public void RemoveIndex(int index)
         {
-            BigInteger big = 2134;
-            this.maxElements = maxElements;
-            this.saveFile = saveFile;
+            this.writer.RemoveIndex(index);
+        }
+        public void Clear()
+        {
+            this.writer.Clear();
+        }
+        public T this[int index]
+        {
+            get 
+            {
+                T result = new T();
+                result.SetInformation(this.writer[index]);
+                return result;
+            }
+            set
+            {
+                if (value == null) throw new NullReferenceException("value == null");
+                this.writer[index] = value.GetBytes();
+            }
+        }
+
+        SetWrite writer;
+        public ArrayLocal(string saveFile)
+        {
+            var result = new ObjType(saveFile, x => File.Open(x, FileMode.OpenOrCreate, FileAccess.ReadWrite));
+            writer = new SetWrite(result);
         }
     }
 }

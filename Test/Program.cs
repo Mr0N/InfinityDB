@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 using Collection.RealizationEnumerator.SaveOrLoadInfo.Binary;
 using Collection.RealizationEnumerator.SaveOrLoadInfo;
 using System.IO;
+using System.IO.Pipes;
+using Microsoft.WindowsAPICodePack;
 using System.Drawing;
+using System.Threading;
 
 namespace Test
 {
@@ -26,24 +29,29 @@ namespace Test
             string res = "";
             var bytes = Encoding.UTF8.GetBytes(res);
             File.Delete("save");
-            var stream = File.Open("save", FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            var becap = File.Open("save1", FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            SetWrite creator = new SetWrite(10, stream, becap);
+            var result = new ObjType("save", x => File.Open(x, FileMode.OpenOrCreate, FileAccess.ReadWrite));
+            SetWrite creator = new SetWrite(10, result);
             for (int i = 0; i < 10; i++)
             {
-                creator.SetInfo(GetByteToString((res+i)));
+                creator.SetInfo(GetByteToString((res + i)));
             }
             creator.RemoveIndex(5);
             creator.RemoveIndex(3);
-            while (true)
-            {
-                Console.WriteLine("Index");
-                int index = int.Parse(Console.ReadLine());
-                Console.WriteLine("String:");
-                creator[index] = GetByteToString(Console.ReadLine());
-                Write(creator);
-            }
+            creator.Clear();
+            result.stream?.Dispose();
+            string resZ = File.ReadAllText("save");
+            Console.WriteLine(resZ);
+            Console.WriteLine("OK");
             Console.ReadKey();
+            //while (true)
+            //{
+            //    Console.WriteLine("Index");
+            //    int index = int.Parse(Console.ReadLine());
+            //    Console.WriteLine("String:");
+            //    creator[index] = GetByteToString(Console.ReadLine());
+            //    Write(creator);
+            //}
+            //Console.ReadKey();
         }
         private static void Write(in SetWrite set)
         {

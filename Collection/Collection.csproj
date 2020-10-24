@@ -4,4 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Vanara.Core" Version="3.2.19" />
+    <PackageReference Include="Vanara.PInvoke.Kernel32" Version="3.2.19" />
+  </ItemGroup>
+
 </Project>

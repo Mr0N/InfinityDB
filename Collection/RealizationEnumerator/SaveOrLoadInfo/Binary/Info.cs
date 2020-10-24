@@ -27,7 +27,7 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
             var obj = this.index.Where(x => x.remove != true && x.block != true).ElementAt(index);
             return this.index.FindIndex(t => t == obj);
         }
-        public Info(int count, Stream stream, Stream stream_becap) : base(count, stream, stream_becap)
+        public Info(int count, ObjType objType) : base(count, objType)
         {
 
         }

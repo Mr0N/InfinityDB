@@ -19,7 +19,7 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
             return x;
         }
         protected List<IndexType> index { private set; get; }
-        protected Create(Stream stream, Stream stream_becap) : base(stream, stream_becap)
+        protected Create(ObjType objType) : base(objType)
         {
             this.index = new List<IndexType>();
         }

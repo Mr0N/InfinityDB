@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using Collection.RealizationEnumerator.SaveOrLoadInfo.API;
 
 namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
 {
@@ -55,16 +56,15 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
                 pos++;
                 
             }
+            base.objType.Exscind(write);
         }
         protected bool CheckIsRange(int index, in List<IndexType> position)
         {
             return position.Find(x => x.indexMaximum > index && x.indexMinimum <= index) != null;
         }
-        Stream stream;
 
-        public Destroyer(int count, Stream stream,Stream stream_becap) : base(count, stream, stream_becap)
+        public Destroyer(int count, ObjType objType) : base(count, objType)
         {
-            this.stream = stream;
         }
     }
 }

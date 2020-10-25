@@ -10,9 +10,9 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
         public override byte[] this[int index]
         {
             get => base[index];
-            set => Set(index, value);
+            set => Set(index,ref  value);
         }
-        private void Set(int index, byte[] bytes)
+        private void Set(int index,ref  byte[] bytes)
         {
             
             int ind = this.GetIlusionIndex(index);
@@ -20,11 +20,11 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
             int lengthBytes = (int)(obj.indexMaximum - obj.indexMinimum);
             if (lengthBytes == bytes.Length)//Якщо розмір байтів не помінявся
             {
-                this.Write(bytes, 0, bytes.Length, obj.indexMaximum);//Повторний записа байтів, на то саме місце
+                this.Write(ref bytes, 0, bytes.Length, obj.indexMaximum);//Повторний записа байтів, на то саме місце
             }
             else if (bytes.Length < lengthBytes)//Якщо кількість байтів зменшилася
             {
-                var result = this.Write(bytes, 0, bytes.Length, obj.indexMinimum);
+                var result = this.Write(ref bytes, 0, bytes.Length, obj.indexMinimum);
                 this.index.RemoveAt(ind);
                 var x = new IndexType(result.one_position, result.two_position);
                 this.index.Add(x);
@@ -34,8 +34,8 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
             else if (lengthBytes < bytes.Length)//Якщо кількість байтів збільшилася
             {
                 //int maxLength = bytes.Length - lengthBytes;//Кількість байтів яку треба записати в комірці
-                var resultWrite = this.Write(bytes, 0, lengthBytes, obj.indexMinimum);
-                var result_two = this.WriteNew(bytes, lengthBytes, bytes.Length- lengthBytes);
+                var resultWrite = this.Write(ref bytes, 0, lengthBytes, obj.indexMinimum);
+                var result_two = this.WriteNew(ref bytes, lengthBytes, bytes.Length- lengthBytes);
                 this.index.RemoveAt(ind);
                 var indexZ = new IndexType(result_two.one_position, result_two.two_position, block: true);
                 var indexType = new IndexType(resultWrite.one_position, resultWrite.two_position);

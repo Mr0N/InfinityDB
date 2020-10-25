@@ -16,29 +16,59 @@ using System.Diagnostics;
 
 namespace Test
 {
-    class Test : ISerializableObject<Test>
+    class Test : IDisposable,ISerializableObject<Test>
     {
         public string Name { set; get; }
         public string Surname { set; get; }
         public byte[] GetBytes()
         {
-            return Encoding.UTF8.GetBytes(ToBase64(this.Name) +"|"+ToBase64(this.Surname));
+            var bytes = ToBytes(this.Name);
+            var SurnameBytes = ToBytes(this.Surname);
+            byte[] result = new byte[bytes.Length + SurnameBytes.Length];
+            Join(ref result, in bytes, SurnameBytes);
+            bytes = null;
+            SurnameBytes = null;
+            return result;
         }
+        private void Join(ref byte[] result, in byte[] one, in byte[] two)
+        {
+            int count = one.Length + two.Length;
+            int pos = 0;
+            for (int z = 0; z < one.Length; z++)
+            {
+                result[pos] = one[z];
+                pos++;
+            }
+            for (int y = 0; y < two.Length; y++)
+            {
+                result[pos] = two[y];
+                pos++;
+            }
+        }
+        private byte[] ToBytes(string text)
+        {
+            var bytes =  Encoding.UTF8.GetBytes(text);
+            var result = BitConverter.GetBytes(text.Length);
+            byte[] r = new byte[bytes.Length + result.Length];
+            Join(ref r, result, bytes);
+            bytes = null;
+            result = null;
+            return r;
+        } 
         public Test SetInformation(byte[] information)
         {
-           var res =  Encoding.UTF8.GetString(information).Split('|');
-            this.Name = FromBase64(res[0]);
-            this.Surname = FromBase64(res[1]);
+            int count = BitConverter.ToInt32(information, 0);
+            this.Name = Encoding.UTF8.GetString(information, 4, count);
+            int newCount = BitConverter.ToInt32(information, count+4);
+            this.Surname = Encoding.UTF8.GetString(information, count + 8, newCount);
             return this;
         }
-        private string ToBase64(string str)
+        public void Dispose()
         {
-            return Convert.ToBase64String(Encoding.UTF8.GetBytes(str));
+            this.Name = null;
+            this.Surname = null;
         }
-        private string FromBase64(string str)
-        {
-            return Encoding.UTF8.GetString(Convert.FromBase64String(str));
-        }
+
         public Test()
         {
         }
@@ -60,22 +90,22 @@ namespace Test
             Stopwatch watch = new Stopwatch();
             LocalList<Test> arrayLocal = new LocalList<Test>("baza1234");
             watch.Start();
-            for (int i = 0; i < 50000; i++)
+            for (int i = 0; i < 500000; i++)
             {
-                arrayLocal.Add(new Test() { Name="MyName",Surname=i.ToString() });
+                var test = new Test() { Name = new string('-',5000), Surname = i.ToString() };
+                arrayLocal.Add(test);
+                test = null;
             }
             watch.Stop();
             arrayLocal.CreateCount();
             arrayLocal.Update();
-            Console.WriteLine("Second:"+watch.ElapsedMilliseconds/1000);
+            Console.WriteLine("Записування:" + watch.ElapsedMilliseconds);
             watch.Reset();
             watch.Start();
-            var suma = arrayLocal;
-            var result = arrayLocal.Where(x => x.Surname.StartsWith("1"))
-                .Sum(u => int.Parse(u.Surname));
-            Console.WriteLine("Suma:"+ result);
+            var result = arrayLocal.Sum(x => (x.Name.Length - 4f)).ToString();
             watch.Stop();
-            Console.WriteLine("Milisecond Echo="+watch.ElapsedMilliseconds);
+            Console.WriteLine("Результат:" + result);
+            Console.WriteLine("Читання=" + watch.ElapsedMilliseconds);
             Console.WriteLine("OK");
             Console.ReadKey();
         }

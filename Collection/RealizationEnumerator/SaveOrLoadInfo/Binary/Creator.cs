@@ -41,9 +41,9 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
         {
             return this.Read(two, one - two);
         }
-        public void SetInfo(byte[] info)
+        public void SetInfo(ref byte[] info)
         {
-            base.WriteInfo(info);
+            base.WriteInfo(ref info);
         }
         public Creator(ObjType objType) : base(objType)
         {

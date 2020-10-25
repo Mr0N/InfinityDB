@@ -1,34 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
 {
     public class Writer
     {
-        protected int length;
-        protected virtual (int one_position, int two_position) WriteNew(byte[] array)
+        protected long length;
+        protected virtual (long one_position, long two_position) WriteNew(ref byte[] array)
         {
-            return WriteNew(array, 0, array.Length);
+            return WriteNew(ref array, 0, array.Length);
         }
-        protected virtual (int one_position, int two_position) WriteNew(byte[] array, int offset, int count)
+        protected virtual (long one_position, long two_position) WriteNew(ref byte[] array, int offset, int count)
         {
-            int becap = length;
+            long becap = length;
             stream.Seek(length, SeekOrigin.Begin);
             stream.Write(array, offset, count);
             length += array.Length;
-            stream.Flush();
+            array = null;
             return (becap, length);
         }
-        protected virtual (int one_position, int two_position) Write(byte[] array, int offsetArray, int countArray, int offsetSeek)
+        protected virtual (long one_position, long two_position) Write(ref byte[] array, int offsetArray, int countArray, long offsetSeek)
         {
             stream.Seek(offsetSeek, SeekOrigin.Begin);
             if (countArray > array.Length) countArray = array.Length;
             stream.Write(array, offsetArray, countArray);
-            return (offsetSeek, (int)stream.Position);
+            array = null;
+            return (offsetSeek, stream.Position);
         }
-        protected virtual byte[] Read(int one, int two)
+        protected virtual byte[] Read(long one, long two)
         {
             byte[] bytes = new byte[one-two];
             stream.Seek(two, SeekOrigin.Begin);

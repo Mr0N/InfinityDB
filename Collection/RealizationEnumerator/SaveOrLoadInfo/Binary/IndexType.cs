@@ -6,13 +6,13 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
 {
     public class IndexType
     {
-        public int indexMinimum { set; get; }
-        public int indexMaximum { set; get; }
+        public long indexMinimum { set; get; }
+        public long indexMaximum { set; get; }
         public bool remove { set; get; }
         public bool block { set; get; }
         public IndexType next { set; get; }
-        public IndexType(int indexMax,
-                    int indexMin,bool remove = false,
+        public IndexType(long indexMax,
+                    long indexMin,bool remove = false,
                     bool block = false,IndexType next=null)
         {
             this.indexMinimum = indexMax;

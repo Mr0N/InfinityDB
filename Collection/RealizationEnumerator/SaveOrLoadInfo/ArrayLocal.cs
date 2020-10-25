@@ -16,7 +16,8 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo
         }
         public void Add(T t)
         {
-            writer.SetInfo(t.GetBytes());
+            var re = t.GetBytes();
+            writer.SetInfo(ref re);
         }
         public void Update()
         {

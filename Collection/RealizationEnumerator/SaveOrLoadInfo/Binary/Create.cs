@@ -7,13 +7,13 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
 {
     public class Create : Writer
     {
-        protected override byte[] Read(int one, int two)
+        protected override byte[] Read(long one, long two)
         {
             return base.Read(one, two);
         }
-        protected IndexType WriteInfo(byte[] array)
+        protected IndexType WriteInfo(ref byte[] array)
         {
-            var result = base.WriteNew(array);
+            var result = base.WriteNew(ref array);
             var x = new IndexType(result.one_position, result.two_position);
             index.Add(x);
             return x;

@@ -17,8 +17,8 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
         {
             get
             {
-                int res = GetIlusionIndex(index);
-                return GetInfo(res);
+                //int res = GetIlusionIndex(index);
+                return GetInfo(index);
             }
             set
             {

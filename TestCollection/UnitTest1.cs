@@ -9,7 +9,7 @@ using System.Diagnostics;
 namespace TestCollection
 {
     [TestClass]
-    public class UnitTest1:Function
+    public class UnitTest1 : Function
     {
         /// <summary>
         /// Провірка колекцій на рівність
@@ -41,55 +41,57 @@ namespace TestCollection
         [TestMethod]
         public void TestRemoveEqual()
         {
-            var result =  CreateTestCollection(x => x.RemoveIndex(10), y => y.RemoveAt(10));
+            var result = CreateTestCollection(x => x.RemoveIndex(10), y => y.RemoveAt(10));
             CollectionAssert.AreEqual(result.test, result.nottest);
         }
-        private (List<string> test,List<string> nottest) CreateTestCollection(Action<SetWrite> actionTest=null,Action<List<string>> notTest=null)
+        private (List<string> test, List<string> nottest) CreateTestCollection(Action<SetWrite> actionTest = null, Action<List<string>> notTest = null)
         {
-            try
+            //try
+            //{
+            var obj = GetObj();
+            using (obj.objType.stream)
             {
-                var obj = GetObj();
-                using (obj.objType.stream)
+                var result = obj.set;
+                if (actionTest != null)
                 {
-                    var result = obj.set;
-                    if (actionTest != null)
-                    {
-                        obj.set.Update();
-                        actionTest.Invoke(result);
-                    }
-                    if (notTest != null)
-                    {
-                        obj.set.Update();
-                        notTest.Invoke(obj.ls);
-                    }
-                    
-                    int count = result.Count();
-                    List<string> list = new List<string>();
                     obj.set.Update();
-                    for (int i = 0; i < count; i++)
-                    {
-                        list.Add(GetString(result[i]));
-                    }
-                    return (list, obj.ls);
+                    actionTest.Invoke(result);
                 }
-            }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
+                if (notTest != null)
+                {
+                    obj.set.Update();
+                    notTest.Invoke(obj.ls);
+                }
+
+                obj.set.Update();
+                int count = result.Count();
+                List<string> list = new List<string>();
+                for (int i = 0; i < count; i++)
+                {
+                    list.Add(GetString(result[i]));
+                }
+                obj.objType.stream.Dispose();
                 RemoveFile();
+                return (list, obj.ls);
             }
+            //}
+            //catch(Exception ex)
+            //{
+            //    throw ex;
+            //}
+            //finally
+            //{
+            //    RemoveFile();
+            //}
         }
-        private (SetWrite set,List<string> ls,ObjType objType) GetObj()
+        private (SetWrite set, List<string> ls, ObjType objType) GetObj()
         {
             var obj = CreateObj();
-            var enumerable =  Enumerable.Range(0, 1000).Select(y=>y.ToString())
+            var enumerable = Enumerable.Range(0, 1000).Select(y => y.ToString())
                 .ToList();
             enumerable.ForEach(x => obj.set.SetInfo(GetByteToString(x.ToString())));
             obj.set.Update();
-            return (obj.set, enumerable,obj.obj);
+            return (obj.set, enumerable, obj.obj);
         }
     }
 }

@@ -46,43 +46,43 @@ namespace TestCollection
         }
         private (List<string> test, List<string> nottest) CreateTestCollection(Action<SetWrite> actionTest = null, Action<List<string>> notTest = null)
         {
-            //try
-            //{
-            var obj = GetObj();
-            using (obj.objType.stream)
+            try
             {
-                var result = obj.set;
-                if (actionTest != null)
+                var obj = GetObj();
+                using (obj.objType.stream)
                 {
-                    obj.set.Update();
-                    actionTest.Invoke(result);
-                }
-                if (notTest != null)
-                {
-                    obj.set.Update();
-                    notTest.Invoke(obj.ls);
-                }
+                    var result = obj.set;
+                    if (actionTest != null)
+                    {
+                        obj.set.Update();
+                        actionTest.Invoke(result);
+                    }
+                    if (notTest != null)
+                    {
+                        obj.set.Update();
+                        notTest.Invoke(obj.ls);
+                    }
 
-                obj.set.Update();
-                int count = result.Count();
-                List<string> list = new List<string>();
-                for (int i = 0; i < count; i++)
-                {
-                    list.Add(GetString(result[i]));
+                    obj.set.Update();
+                    int count = result.Count();
+                    List<string> list = new List<string>();
+                    for (int i = 0; i < count; i++)
+                    {
+                        list.Add(GetString(result[i]));
+                    }
+                    obj.objType.stream.Dispose();
+
+                    return (list, obj.ls);
                 }
-                obj.objType.stream.Dispose();
-                RemoveFile();
-                return (list, obj.ls);
             }
-            //}
-            //catch(Exception ex)
-            //{
-            //    throw ex;
-            //}
-            //finally
-            //{
-            //    RemoveFile();
-            //}
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                RemoveFile();
+            }
         }
         private (SetWrite set, List<string> ls, ObjType objType) GetObj()
         {

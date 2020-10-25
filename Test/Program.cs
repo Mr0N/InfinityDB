@@ -62,7 +62,7 @@ namespace Test
             watch.Start();
             for (int i = 0; i < 50000; i++)
             {
-                arrayLocal.Add(new Test() { Name="MyName",Surname=i+"NameNot" });
+                arrayLocal.Add(new Test() { Name="MyName",Surname=i.ToString() });
             }
             watch.Stop();
             arrayLocal.CreateCount();
@@ -72,12 +72,8 @@ namespace Test
             watch.Start();
             var suma = arrayLocal;
             var result = arrayLocal.Where(x => x.Surname.StartsWith("1"))
-                .Select(x => x.Surname);
-            foreach (var item in result)
-            {
-                Console.WriteLine(item);
-            }
-            Console.WriteLine("Suma:"+suma);
+                .Sum(u => int.Parse(u.Surname));
+            Console.WriteLine("Suma:"+ result);
             watch.Stop();
             Console.WriteLine("Секунд Echo="+watch.ElapsedMilliseconds/1000);
             Console.WriteLine("OK");

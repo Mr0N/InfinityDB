@@ -18,16 +18,26 @@ namespace Test
 {
     class Test : ISerializableObject<Test>
     {
-        public string text { set; get; }
+        public string Name { set; get; }
+        public string Surname { set; get; }
         public byte[] GetBytes()
         {
-            return Encoding.UTF8.GetBytes(text);
+            return Encoding.UTF8.GetBytes(ToBase64(this.Name) +"|"+ToBase64(this.Surname));
         }
-
         public Test SetInformation(byte[] information)
         {
-            this.text = Encoding.UTF8.GetString(information);
+           var res =  Encoding.UTF8.GetString(information).Split('|');
+            this.Name = FromBase64(res[0]);
+            this.Surname = FromBase64(res[1]);
             return this;
+        }
+        private string ToBase64(string str)
+        {
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(str));
+        }
+        private string FromBase64(string str)
+        {
+            return Encoding.UTF8.GetString(Convert.FromBase64String(str));
         }
         public Test()
         {
@@ -45,64 +55,33 @@ namespace Test
         }
         static void Main(string[] args)
         {
+            Console.InputEncoding = Encoding.Unicode;
+            Console.OutputEncoding = Encoding.Unicode;
             Stopwatch watch = new Stopwatch();
-            LocalList<Test> arrayLocal = new LocalList<Test>("save234");
+            LocalList<Test> arrayLocal = new LocalList<Test>("baza1234");
             watch.Start();
-            for (int i = 0; i < 100000; i++)
+            for (int i = 0; i < 50000; i++)
             {
-                arrayLocal.Add(new Test() { text = i.ToString() }) ;
+                arrayLocal.Add(new Test() { Name="MyName",Surname=i+"NameNot" });
             }
+            watch.Stop();
             arrayLocal.CreateCount();
             arrayLocal.Update();
-            watch.Stop();
-            Console.WriteLine("Add="+watch.ElapsedMilliseconds);
+            Console.WriteLine("Second:"+watch.ElapsedMilliseconds/1000);
             watch.Reset();
             watch.Start();
-            string res = "";
-            int countIteration = 0;
-            int becap = 0;
-            foreach (var item in arrayLocal)
+            var suma = arrayLocal;
+            var result = arrayLocal.Where(x => x.Surname.StartsWith("1"))
+                .Select(x => x.Surname);
+            foreach (var item in result)
             {
-                countIteration++;
-                if (countIteration > (becap+1000))
-                {
-                    Console.WriteLine(countIteration);
-                    becap = countIteration;
-                }
-                res = item.text;
-                //Console.WriteLine(res);
+                Console.WriteLine(item);
             }
+            Console.WriteLine("Suma:"+suma);
             watch.Stop();
-            Console.WriteLine("Echo="+watch.ElapsedMilliseconds);
+            Console.WriteLine("Секунд Echo="+watch.ElapsedMilliseconds/1000);
             Console.WriteLine("OK");
             Console.ReadKey();
-            //string res = "";
-            //var bytes = Encoding.UTF8.GetBytes(res);
-            //File.Delete("save");
-            //var result = new ObjType("save", x => File.Open(x, FileMode.OpenOrCreate, FileAccess.ReadWrite));
-            //SetWrite creator = new SetWrite(result);
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    creator.SetInfo(GetByteToString((res + i)));
-            //}
-            //creator.RemoveIndex(5);
-            //creator.RemoveIndex(3);
-            //creator.Clear();
-            //creator.SetInfo(GetByteToString("New"));
-            //result.stream.Dispose();
-            //string resZ = File.ReadAllText("save");
-            //Console.WriteLine(resZ);
-            //Console.WriteLine("OK");
-            //Console.ReadKey();
-            //while (true)
-            //{
-            //    Console.WriteLine("Index");
-            //    int index = int.Parse(Console.ReadLine());
-            //    Console.WriteLine("String:");
-            //    creator[index] = GetByteToString(Console.ReadLine());
-            //    Write(creator);
-            //}
-            //Console.ReadKey();
         }
         private static void Write(in SetWrite set)
         {

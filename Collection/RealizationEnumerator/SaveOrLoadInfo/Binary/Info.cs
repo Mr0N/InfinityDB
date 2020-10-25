@@ -8,6 +8,11 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
 {
     public class Info : Destroyer
     {
+        public override void RemoveIndex(int index)
+        {
+            int ind = GetIlusionIndex(index);
+            base.RemoveIndex(ind);
+        }
         public virtual byte[] this[int index]
         {
             get

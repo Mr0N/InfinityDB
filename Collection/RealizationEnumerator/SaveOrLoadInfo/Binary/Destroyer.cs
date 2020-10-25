@@ -12,8 +12,9 @@ namespace Collection.RealizationEnumerator.SaveOrLoadInfo.Binary
 
     public class Destroyer : Creator
     {
-        public void RemoveIndex(int index)
+        public virtual void RemoveIndex(int index)
         {
+            
             var rem = this.index[index];
             rem.remove = true;
             while (rem.next != null)

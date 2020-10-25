@@ -52,10 +52,20 @@ namespace TestCollection
                 using (obj.objType.stream)
                 {
                     var result = obj.set;
-                    if (actionTest !=null) actionTest.Invoke(result);
-                    if (notTest != null) notTest.Invoke(obj.ls);
+                    if (actionTest != null)
+                    {
+                        obj.set.Update();
+                        actionTest.Invoke(result);
+                    }
+                    if (notTest != null)
+                    {
+                        obj.set.Update();
+                        notTest.Invoke(obj.ls);
+                    }
+                    
                     int count = result.Count();
                     List<string> list = new List<string>();
+                    obj.set.Update();
                     for (int i = 0; i < count; i++)
                     {
                         list.Add(GetString(result[i]));
@@ -78,6 +88,7 @@ namespace TestCollection
             var enumerable =  Enumerable.Range(0, 1000).Select(y=>y.ToString())
                 .ToList();
             enumerable.ForEach(x => obj.set.SetInfo(GetByteToString(x.ToString())));
+            obj.set.Update();
             return (obj.set, enumerable,obj.obj);
         }
     }

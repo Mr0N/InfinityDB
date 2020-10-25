@@ -75,7 +75,7 @@ namespace Test
                 .Sum(u => int.Parse(u.Surname));
             Console.WriteLine("Suma:"+ result);
             watch.Stop();
-            Console.WriteLine("Секунд Echo="+watch.ElapsedMilliseconds/1000);
+            Console.WriteLine("Milisecond Echo="+watch.ElapsedMilliseconds);
             Console.WriteLine("OK");
             Console.ReadKey();
         }
